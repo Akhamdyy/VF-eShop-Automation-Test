@@ -32,6 +32,10 @@ public class BasePage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
+    protected void clickHidden(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+    }
+
     protected WebElement findInShadowDom(String cssSelector) {
         return wait.until(d -> {
             Object result = ((JavascriptExecutor) d).executeScript(
