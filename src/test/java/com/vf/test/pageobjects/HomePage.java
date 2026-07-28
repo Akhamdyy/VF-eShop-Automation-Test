@@ -2,6 +2,7 @@ package com.vf.test.pageobjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class HomePage extends BasePage {
 
@@ -23,6 +25,9 @@ public class HomePage extends BasePage {
 
     @FindBy(id = "sl-user-profile-button-1")
     private WebElement loginIcon;
+
+    @FindBy(xpath = "//*[starts-with(@id, \"sl-category-section-vf-category-card-1-\")]/a")
+    private List<WebElement> categoryLinks;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -72,5 +77,16 @@ public class HomePage extends BasePage {
 
     public void clickLoginIcon() {
         click(loginIcon);
+    }
+
+    public void clickCategory(String categoryName) {
+        waitForVisible(categoryLinks.get(0));
+        for (WebElement link : categoryLinks) {
+            if (link.getText().trim().equalsIgnoreCase(categoryName.trim())) {
+                click(link);
+                return;
+            }
+        }
+        throw new NoSuchElementException("No category found under Shop By Category matching: " + categoryName);
     }
 }
