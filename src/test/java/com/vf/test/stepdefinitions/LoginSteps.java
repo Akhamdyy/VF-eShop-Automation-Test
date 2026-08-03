@@ -40,7 +40,7 @@ public class LoginSteps {
 
     @When("the user logs in with username {string} and password {string}")
     public void the_user_logs_in_with_username_and_password(String username, String password) {
-        loginPage.login(username, password);
+        loginPage.login(Hooks.resolve(username), Hooks.resolve(password));
     }
 
     @Then("the user should be redirected back to the eShop homepage")

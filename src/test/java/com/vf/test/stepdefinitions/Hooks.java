@@ -8,7 +8,10 @@ import org.openqa.selenium.edge.EdgeOptions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.util.List;
 import java.util.Properties;
 
 public class Hooks {
@@ -20,6 +23,7 @@ public class Hooks {
     public void setUp() throws IOException {
         InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties");
         config.load(input);
+        loadEnvFile();
 
         System.setProperty("webdriver.edge.driver",
                 System.getProperty("user.home") + "\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Microsoft.EdgeDriver_Microsoft.Winget.Source_8wekyb3d8bbwe\\msedgedriver.exe");
@@ -36,5 +40,39 @@ public class Hooks {
         if (driver != null) {
             driver.quit();
         }
+    }
+
+    private void loadEnvFile() throws IOException {
+        Path envPath = Path.of(System.getProperty("user.dir"), ".env");
+        if (!Files.exists(envPath)) {
+            return;
+        }
+        List<String> lines = Files.readAllLines(envPath);
+        for (String line : lines) {
+            String trimmed = line.trim();
+            if (trimmed.isEmpty() || trimmed.startsWith("#") || !trimmed.contains("=")) {
+                continue;
+            }
+            int separatorIndex = trimmed.indexOf('=');
+            String key = trimmed.substring(0, separatorIndex).trim();
+            String value = trimmed.substring(separatorIndex + 1).trim();
+            config.setProperty(key, value);
+        }
+    }
+
+    /**
+     * Resolves "{env:KEY}" placeholders used in feature files against values loaded from .env,
+     * so test credentials and PII never appear as literals in Gherkin.
+     */
+    public static String resolve(String value) {
+        if (value != null && value.startsWith("{env:") && value.endsWith("}")) {
+            String key = value.substring(5, value.length() - 1);
+            String resolved = config.getProperty(key);
+            if (resolved == null) {
+                throw new IllegalStateException("Missing .env value for key: " + key);
+            }
+            return resolved;
+        }
+        return value;
     }
 }

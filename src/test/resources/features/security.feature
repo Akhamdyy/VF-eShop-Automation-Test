@@ -15,8 +15,8 @@ Feature: eShop Security Checks
     Then the session cookies should have changed since login began
 
     Examples:
-      | username    | password |
-      | 01020083131 | Akh_2112 |
+      | username            | password            |
+      | {env:TEST_USERNAME} | {env:TEST_PASSWORD} |
 
   # S-015: transport security and baseline response headers
   Scenario: S-015 - HTTPS is enforced with security headers present

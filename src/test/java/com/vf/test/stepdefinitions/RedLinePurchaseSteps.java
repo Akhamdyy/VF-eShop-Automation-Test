@@ -20,7 +20,7 @@ public class RedLinePurchaseSteps {
         homePage.open(url);
         homePage.clickLoginIcon();
         loginPage = new LoginPage(Hooks.driver);
-        loginPage.login(username, password);
+        loginPage.login(Hooks.resolve(username), Hooks.resolve(password));
     }
 
     @When("the user clicks on {string} from Shop by Category")
@@ -59,7 +59,7 @@ public class RedLinePurchaseSteps {
 
     @When("the user enters national id {string} first name {string} and last name {string}")
     public void the_user_enters_national_id_first_name_and_last_name(String nationalId, String firstName, String lastName) {
-        redLineCheckoutPage.enterBuyerDetails(nationalId, firstName, lastName);
+        redLineCheckoutPage.enterBuyerDetails(Hooks.resolve(nationalId), Hooks.resolve(firstName), Hooks.resolve(lastName));
     }
 
     @When("the user clicks Next on the buyer details form")
@@ -115,7 +115,7 @@ public class RedLinePurchaseSteps {
 
     @Then("the current page URL should not contain the national id {string}")
     public void the_current_page_url_should_not_contain_the_national_id(String nationalId) {
-        Assert.assertFalse(Hooks.driver.getCurrentUrl().contains(nationalId),
+        Assert.assertFalse(Hooks.driver.getCurrentUrl().contains(Hooks.resolve(nationalId)),
                 "National ID was exposed in the page URL");
     }
 }
