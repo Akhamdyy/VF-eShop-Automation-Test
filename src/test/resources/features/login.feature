@@ -9,9 +9,9 @@ Feature: eShop Login Flow
     Then the user should be redirected back to the eShop homepage
 
     Examples:
-      | language | side  | username    | password |
-      | English  | right | 01020083131 | Akh_2112 |
-      | Arabic   | left  | 01020083131 | Akh_2112 |
+      | language | side  | username           | password           |
+      | English  | right | {env:TEST_USERNAME} | {env:TEST_PASSWORD} |
+      | Arabic   | left  | {env:TEST_USERNAME} | {env:TEST_PASSWORD} |
 
   # F-003: language can be switched from the homepage without logging in
   Scenario Outline: Switch the site language without logging in

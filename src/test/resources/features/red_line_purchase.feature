@@ -16,10 +16,10 @@ Feature: RED Line Purchase Flow
     And the cart should be empty
 
     Examples:
-      | simType  | plan           | username    | password | nationalId     | firstName | lastName |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 | 30412212100359 | Ali       | Khaled   |
-      | eSim     | RED ADVANCE+   | 01020083131 | Akh_2112 | 30412212100359 | Ali       | Khaled   |
-      | Sim Card | RED PRIME+     | 01020083131 | Akh_2112 | 30412212100359 | Ali       | Khaled   |
+      | simType  | plan           | username            | password            | nationalId              | firstName            | lastName            |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | {env:TEST_NATIONAL_ID} | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
+      | eSim     | RED ADVANCE+   | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | {env:TEST_NATIONAL_ID} | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
+      | Sim Card | RED PRIME+     | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | {env:TEST_NATIONAL_ID} | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
 
   # F-010: Choose This Line must stay disabled until a number is selected
   Scenario Outline: Choose This Line stays disabled without a selected number
@@ -29,8 +29,8 @@ Feature: RED Line Purchase Flow
     Then Choose This Line should remain disabled
 
     Examples:
-      | simType  | username    | password |
-      | Sim Card | 01020083131 | Akh_2112 |
+      | simType  | username            | password            |
+      | Sim Card | {env:TEST_USERNAME} | {env:TEST_PASSWORD} |
 
   # F-014: a plan outside the supported catalog must not be selectable
   Scenario Outline: An unsupported RED plan is not available
@@ -42,10 +42,12 @@ Feature: RED Line Purchase Flow
     Then the "<plan>" plan should not be available
 
     Examples:
-      | simType  | username    | password | plan           |
-      | Sim Card | 01020083131 | Akh_2112 | RED UNLIMITED+ |
+      | simType  | username            | password            | plan           |
+      | Sim Card | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | RED UNLIMITED+ |
 
   # F-019 / S-001: buyer details form must stay locked behind invalid or incomplete data
+  # nationalId is left literal here (blank / too-short / non-numeric / too-long) since these
+  # values are the deliberately invalid input under test, not real PII.
   Scenario Outline: The buyer details Next button stays disabled with invalid data
     Given the user opens the eShop website and logs in with username "<username>" and password "<password>"
     When the user clicks on "RED lines" from Shop by Category
@@ -58,11 +60,11 @@ Feature: RED Line Purchase Flow
     Then the Next button on the buyer details form should remain disabled
 
     Examples:
-      | simType  | plan           | username    | password | nationalId         | firstName | lastName |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 |                     | Ali       | Khaled   |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 | 123                 | Ali       | Khaled   |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 | abcdefghijklm       | Ali       | Khaled   |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 | 304122121003599999  | Ali       | Khaled   |
+      | simType  | plan           | username            | password            | nationalId          | firstName            | lastName            |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} |                     | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | 123                 | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | abcdefghijklm       | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | 304122121003599999  | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
 
   # F-022: cannot proceed to checkout without choosing a payment support option
   Scenario Outline: Checkout stays disabled without a payment support option
@@ -78,8 +80,8 @@ Feature: RED Line Purchase Flow
     Then the Checkout button should remain disabled
 
     Examples:
-      | simType  | plan           | username    | password | nationalId     | firstName | lastName |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 | 30412212100359 | Ali       | Khaled   |
+      | simType  | plan           | username            | password            | nationalId              | firstName            | lastName            |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | {env:TEST_NATIONAL_ID} | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
 
   # S-013: the National ID must never leak into the page URL
   Scenario Outline: National ID is not exposed in the page URL
@@ -94,5 +96,5 @@ Feature: RED Line Purchase Flow
     Then the current page URL should not contain the national id "<nationalId>"
 
     Examples:
-      | simType  | plan           | username    | password | nationalId     | firstName | lastName |
-      | Sim Card | RED ESSENTIAL+ | 01020083131 | Akh_2112 | 30412212100359 | Ali       | Khaled   |
+      | simType  | plan           | username            | password            | nationalId              | firstName            | lastName            |
+      | Sim Card | RED ESSENTIAL+ | {env:TEST_USERNAME} | {env:TEST_PASSWORD} | {env:TEST_NATIONAL_ID} | {env:TEST_FIRST_NAME} | {env:TEST_LAST_NAME} |
