@@ -32,4 +32,10 @@ public class RedLineNumberPage extends BasePage {
         WebElement chooseButton = wait.until(ExpectedConditions.elementToBeClickable(locator));
         click(chooseButton);
     }
+
+    public boolean isChooseThisLineDisabled() {
+        By locator = By.xpath("//button[normalize-space()='Choose this line']");
+        WebElement chooseButton = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return !chooseButton.isEnabled();
+    }
 }

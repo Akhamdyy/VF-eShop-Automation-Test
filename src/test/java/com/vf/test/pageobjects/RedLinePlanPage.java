@@ -28,4 +28,17 @@ public class RedLinePlanPage extends BasePage {
         }
         throw new NoSuchElementException("No RED plan found matching: " + planName);
     }
+
+    public boolean isPlanAvailable(String planName) {
+        By cardsLocator = By.cssSelector("vf-tariff-card");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cardsLocator));
+        List<WebElement> cards = driver.findElements(cardsLocator);
+        for (WebElement card : cards) {
+            WebElement header = card.findElement(By.tagName("h2"));
+            if (header.getText().trim().equalsIgnoreCase(planName.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

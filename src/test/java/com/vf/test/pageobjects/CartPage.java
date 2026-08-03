@@ -29,4 +29,8 @@ public class CartPage extends BasePage {
             removeButtons = driver.findElements(REMOVE_BUTTON);
         }
     }
+
+    public int getItemCount() {
+        return driver.findElements(REMOVE_BUTTON).size();
+    }
 }
