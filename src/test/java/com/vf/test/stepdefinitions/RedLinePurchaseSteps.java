@@ -2,6 +2,7 @@ package com.vf.test.stepdefinitions;
 
 import com.vf.test.pageobjects.*;
 import io.cucumber.java.en.*;
+import org.testng.Assert;
 
 public class RedLinePurchaseSteps {
 
@@ -81,5 +82,40 @@ public class RedLinePurchaseSteps {
     public void the_user_removes_the_items_from_the_cart() {
         cartPage.waitForCartPage();
         cartPage.removeAllItems();
+    }
+
+    @Then("the cart should be empty")
+    public void the_cart_should_be_empty() {
+        Assert.assertEquals(cartPage.getItemCount(), 0, "Cart still contains items after removal");
+    }
+
+    @Then("Choose This Line should remain disabled")
+    public void choose_this_line_should_remain_disabled() {
+        Assert.assertTrue(redLineNumberPage.isChooseThisLineDisabled(),
+                "Choose This Line was enabled without a number selected");
+    }
+
+    @Then("the {string} plan should not be available")
+    public void the_plan_should_not_be_available(String planName) {
+        Assert.assertFalse(redLinePlanPage.isPlanAvailable(planName),
+                "Unsupported plan '" + planName + "' was unexpectedly available");
+    }
+
+    @Then("the Next button on the buyer details form should remain disabled")
+    public void the_next_button_should_remain_disabled() {
+        Assert.assertTrue(redLineCheckoutPage.isNextDisabled(),
+                "Next button was enabled with invalid/incomplete buyer details");
+    }
+
+    @Then("the Checkout button should remain disabled")
+    public void the_checkout_button_should_remain_disabled() {
+        Assert.assertTrue(redLineCheckoutPage.isCheckoutDisabled(),
+                "Checkout button was enabled without a payment support option selected");
+    }
+
+    @Then("the current page URL should not contain the national id {string}")
+    public void the_current_page_url_should_not_contain_the_national_id(String nationalId) {
+        Assert.assertFalse(Hooks.driver.getCurrentUrl().contains(nationalId),
+                "National ID was exposed in the page URL");
     }
 }

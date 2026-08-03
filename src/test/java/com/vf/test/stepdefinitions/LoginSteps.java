@@ -50,4 +50,11 @@ public class LoginSteps {
         Assert.assertTrue(Hooks.driver.getCurrentUrl().contains("eshop.vodafone.com.eg"),
                 "User was not redirected back to the eShop homepage after login");
     }
+
+    @Then("the login should be rejected and no session should be created")
+    public void the_login_should_be_rejected_and_no_session_should_be_created() {
+        loginPage.assertInvalidCredentialsErrorShown();
+        Assert.assertFalse(Hooks.driver.getCurrentUrl().contains("eshop.vodafone.com.eg"),
+                "User appears to have been logged in despite invalid credentials");
+    }
 }

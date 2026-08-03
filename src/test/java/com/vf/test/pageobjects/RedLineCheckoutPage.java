@@ -46,4 +46,12 @@ public class RedLineCheckoutPage extends BasePage {
     public void clickCheckout() {
         click(wait.until(ExpectedConditions.elementToBeClickable(CHECKOUT_BUTTON)));
     }
+
+    public boolean isNextDisabled() {
+        return !wait.until(ExpectedConditions.visibilityOfElementLocated(NEXT_BUTTON)).isEnabled();
+    }
+
+    public boolean isCheckoutDisabled() {
+        return !wait.until(ExpectedConditions.visibilityOfElementLocated(CHECKOUT_BUTTON)).isEnabled();
+    }
 }
