@@ -55,6 +55,13 @@
             <artifactId>allure-cucumber7-jvm</artifactId>
             <version>${allure.version}</version>
         </dependency>
+
+        <!-- AI Test Triage SDK -->
+        <dependency>
+            <groupId>com.aitriage</groupId>
+            <artifactId>triage-sdk-java</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

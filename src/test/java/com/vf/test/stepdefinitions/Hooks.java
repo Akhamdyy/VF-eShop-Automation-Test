@@ -1,7 +1,10 @@
 package com.vf.test.stepdefinitions;
 
+import com.aitriage.sdk.TriageSdk;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -18,12 +21,17 @@ public class Hooks {
 
     public static WebDriver driver;
     public static Properties config = new Properties();
+    private static TriageSdk triageSdk;
 
     @Before
     public void setUp() throws IOException {
         InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties");
         config.load(input);
         loadEnvFile();
+
+        triageSdk = new TriageSdk(
+                config.getProperty("triage.service.url"),
+                config.getProperty("triage.project.id"));
 
         System.setProperty("webdriver.edge.driver",
                 System.getProperty("user.home") + "\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Microsoft.EdgeDriver_Microsoft.Winget.Source_8wekyb3d8bbwe\\msedgedriver.exe");
@@ -33,6 +41,11 @@ public class Hooks {
         options.addArguments("--disable-dev-shm-usage");
         driver = new EdgeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    @AfterStep
+    public void embedFailureArtifacts(Scenario scenario) {
+        triageSdk.onStepFailure(scenario, driver);
     }
 
     @After
