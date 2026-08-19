@@ -12,6 +12,10 @@ import io.cucumber.testng.CucumberOptions;
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
                 "com.aitriage.sdk.TriageEventListener"
         },
+        // Excludes the triage-tool verification suite (deliberately-failing scenarios used to
+        // exercise the AI triage tool itself) from normal runs. Run it explicitly with:
+        // mvn test "-Dcucumber.filter.tags=@triageToolVerification"
+        tags = "not @triageToolVerification",
         monochrome = true
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
